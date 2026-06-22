@@ -1,0 +1,135 @@
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>LMS</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>Employees</li>
+      <li>Leaves</li>
+      <li>Reports</li>
+    </ul>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Header -->
+    <div class="header">
+      <h2>Admin Dashboard</h2>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+    <!-- Messages -->
+    <p class="message" *ngIf="message">{{ message }}</p>
+    <p class="loading" *ngIf="loading">Loading...</p>
+
+    <!-- Stats Cards -->
+    <div class="cards">
+      <div class="card">Employees <h3>{{ employees.length }}</h3></div>
+      <div class="card pending">Pending <h3>{{ pendingCount }}</h3></div>
+      <div class="card approved">Approved <h3>{{ approvedCount }}</h3></div>
+      <div class="card rejected">Rejected <h3>{{ rejectedCount }}</h3></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts">
+      <div class="chart-box">
+        <canvas baseChart [data]="pieChartData" [type]="pieChartType"></canvas>
+      </div>
+      <div class="chart-box">
+        <canvas baseChart [data]="barChartData" [type]="barChartType"></canvas>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-box">
+      <input type="date" [(ngModel)]="fromDateFilter">
+      <input type="date" [(ngModel)]="toDateFilter">
+      <button (click)="filterLeavesByDate()">Filter</button>
+    </div>
+
+    <!-- Export -->
+    <div class="export">
+      <button (click)="exportAllExcel()">Export Excel</button>
+      <button (click)="exportAllPDF()">Export PDF</button>
+    </div>
+
+    <!-- Add Employee -->
+    <div class="form-box">
+      <h3>Add Employee</h3>
+
+      <input [(ngModel)]="username" placeholder="Username">
+      <input [(ngModel)]="password" placeholder="Password">
+
+      <select [(ngModel)]="role">
+        <option value="Admin">Admin</option>
+        <option value="Employee">Employee</option>
+      </select>
+
+      <button (click)="addEmployee()">Add Employee</button>
+    </div>
+
+    <!-- Employee Table -->
+    <div class="table-box">
+      <h3>Employees</h3>
+
+      <div class="table-controls">
+        <input [(ngModel)]="searchText" (input)="filterEmployees()" placeholder="Search">
+        <select [(ngModel)]="selectedRole" (change)="filterEmployees()">
+          <option value="">All</option>
+          <option value="Admin">Admin</option>
+          <option value="Employee">Employee</option>
+        </select>
+      </div>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+
+        <tr *ngFor="let emp of filteredEmployees">
+          <td>{{ emp.username }}</td>
+          <td>{{ emp.role }}</td>
+          <td>
+            <button class="delete" (click)="deleteEmployee(emp.id)">Delete</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Leave Table -->
+    <div class="table-box">
+      <h3>Leaves</h3>
+
+      <table>
+        <tr>
+          <th>Employee</th>
+          <th>Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+
+        <tr *ngFor="let l of leaves">
+          <td>{{ l.employeeName }}</td>
+          <td>{{ l.leaveType }}</td>
+          <td>{{ l.fromDate | date }}</td>
+          <td>{{ l.toDate | date }}</td>
+
+          <td [ngClass]="l.status.toLowerCase()">{{ l.status }}</td>
+
+          <td>
+            <button class="approve" (click)="approve(l.id)" [disabled]="l.status !== 'Pending'">✔</button>
+            <button class="reject" (click)="reject(l.id)" [disabled]="l.status !== 'Pending'">✖</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+</div>

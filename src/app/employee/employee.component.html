@@ -1,0 +1,86 @@
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>LMS</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>My Leaves</li>
+      <li>Apply Leave</li>
+    </ul>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Header -->
+    <div class="header">
+      <h2>Employee Dashboard</h2>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+    <!-- Messages -->
+    <p class="message" *ngIf="message">{{ message }}</p>
+    <p class="loading" *ngIf="loading">Processing...</p>
+
+    <!-- Leave Balance -->
+    <div class="cards">
+      <div class="card">PL <h3>{{ balance.PL || 0 }}</h3></div>
+      <div class="card">SL <h3>{{ balance.SL || 0 }}</h3></div>
+      <div class="card">CL <h3>{{ balance.CL || 0 }}</h3></div>
+    </div>
+
+    <!-- Apply Leave -->
+    <div class="form-box">
+      <h3>Apply Leave</h3>
+
+      <select [(ngModel)]="leaveType">
+        <option value="PL">PL</option>
+        <option value="SL">SL</option>
+        <option value="CL">CL</option>
+      </select>
+
+      <input type="date" [(ngModel)]="fromDate">
+      <input type="date" [(ngModel)]="toDate">
+
+      <p class="days">Total Days: {{ getDays() }}</p>
+
+      <input type="text" [(ngModel)]="reason" placeholder="Reason">
+
+      <button (click)="applyLeave()" [disabled]="loading">
+        Apply Leave
+      </button>
+    </div>
+
+    <!-- Leave Table -->
+    <div class="table-box">
+      <h3>My Leaves</h3>
+
+      <!-- 🔥 EMPTY STATE FIX -->
+      <p *ngIf="myLeaves.length === 0" class="no-data">
+        No leaves applied yet
+      </p>
+
+      <table *ngIf="myLeaves.length > 0">
+        <tr>
+          <th>Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Status</th>
+        </tr>
+
+        <tr *ngFor="let leave of myLeaves">
+          <td>{{ leave.leaveType }}</td>
+          <td>{{ leave.fromDate | date:'shortDate' }}</td>
+          <td>{{ leave.toDate | date:'shortDate' }}</td>
+
+          <td [ngClass]="leave.status.toLowerCase()">
+            {{ leave.status }}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+</div>

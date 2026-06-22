@@ -1,6 +1,15 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { App } from './app/app';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`
+})
+class AppComponent {}
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));
